@@ -1,6 +1,7 @@
 .basic-layout-header {
   height: 50px;
   line-height: 50px;
+  padding: 0 16px;
   background: rgb(6, 22, 41);
 
   :global {
@@ -8,6 +9,18 @@
       flex: 1;
       margin-right: 32px;
       background: transparent;
+
+      .header-icon {
+        height: 50px;
+        width: 50px;
+      }
+
+      .header-title {
+        font-size: 18px;
+        color: #fff;
+        font-weight: bolder;
+        margin-left: 16px;
+      }
     }
   }
 }

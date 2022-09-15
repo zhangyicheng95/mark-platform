@@ -9,8 +9,8 @@ function App() {
     <HashRouter>
       <BasicLayout>
         <Routes>
-          <Route path="/mark" element={<Mark />} />
-          <Route path="/trainer" element={<Trainer />} />
+          <Route path="/mark/*" element={<Mark />} />
+          <Route path="/trainer/*" element={<Trainer />} />
           <Route index element={<Mark />} />
         </Routes>
       </BasicLayout>

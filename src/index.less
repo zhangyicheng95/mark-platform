@@ -29,6 +29,13 @@
     align-items: center;
   }
 
+  .flex-box-start {
+    display: flex;
+    display: -ms-flex;
+    align-items: flex-start;
+    -webkit-align-items: flex-start;
+  }
+
   .flex-box-column {
     display: flex;
     display: -ms-flex;
@@ -66,5 +73,31 @@
     align-items: center;
     justify-content: center;
     -webkit-justify-content: center;
+  }
+
+  .only-show-two-line {
+    word-break: break-all;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: normal;
+    display: -webkit-box;
+    display: -moz-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    /*控制文字行数*/
+  }
+
+  .only-show-two-line-ie {
+    max-height: 38px;
+
+    span {
+      line-height: 19px;
+    }
+  }
+
+  .operation-line {
+    height: 100%;
+    color: #e9e9e9;
+    margin: 0 5px;
   }
 }

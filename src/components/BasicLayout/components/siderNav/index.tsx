@@ -43,7 +43,7 @@ const SiderNav = (props: any) => {
         mode="inline"
         selectedKeys={[selectedKeys !== "/" ? selectedKeys : "/home"]}
         onClick={({ key }) => {
-          navigate(key);
+          navigate(key, { replace: true });
         }}
       >
         {menuConfig.map((menu) => {

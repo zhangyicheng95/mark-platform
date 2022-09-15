@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Layout, Menu, Tooltip, Dropdown, Button } from 'antd';
 import { LaptopOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import icon from '../../assets/app.png'
 
 import styles from './index.less';
 
@@ -10,11 +11,10 @@ const { SubMenu, ItemGroup, Divider } = Menu;
 const CHeader = (props: any) => {
   return (
     <Header className={`${styles.basicLayoutHeader} flex-box`}>
-      <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']} className="left-menu">
-        <Menu.Item key="1">nav 1</Menu.Item>
-        <Menu.Item key="2">nav 2</Menu.Item>
-        <Menu.Item key="3">nav 3</Menu.Item>
-      </Menu>
+      <div className="left-menu flex-box">
+        <img src={icon} alt="icon" className="header-icon" />
+        <span className="header-title">2D数据标注平台</span>
+      </div>
       <Dropdown overlay={settingList}>
         <Button icon={<SettingOutlined />} />
       </Dropdown>
