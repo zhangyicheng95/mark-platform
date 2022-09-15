@@ -10,7 +10,7 @@ const { SubMenu, ItemGroup, Divider } = Menu;
 const CHeader = (props: any) => {
   return (
     <Header className={`${styles.basicLayoutHeader} flex-box`}>
-      <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']} className="left-menu" style={{ flex: 1 }}>
+      <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']} className="left-menu">
         <Menu.Item key="1">nav 1</Menu.Item>
         <Menu.Item key="2">nav 2</Menu.Item>
         <Menu.Item key="3">nav 3</Menu.Item>

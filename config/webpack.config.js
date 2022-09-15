@@ -67,10 +67,12 @@ const useTailwind = fs.existsSync(
 const swSrc = paths.swSrc;
 
 // style files regexes
-const cssRegex = /\.(css)$/;
+const cssRegex = /\.(css|less)$/;
 const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
+const lessRegex = /\.(less)$/;
+const lessModuleRegex = /\.module\.less$/;
 
 const hasJsxRuntime = (() => {
   if (process.env.DISABLE_NEW_JSX_TRANSFORM === "true") {
@@ -105,7 +107,7 @@ module.exports = function (webpackEnv) {
   const shouldUseReactRefresh = env.raw.FAST_REFRESH;
 
   // common function to get style loaders
-  const getStyleLoaders = (cssOptions, preProcessor) => {
+  const getStyleLoaders = (cssOptions, lessOptions, preProcessor) => {
     const loaders = [
       isEnvDevelopment && require.resolve("style-loader"),
       isEnvProduction && {
@@ -119,6 +121,10 @@ module.exports = function (webpackEnv) {
       {
         loader: require.resolve("css-loader"),
         options: cssOptions,
+      },
+      {
+        loader: require.resolve("less-loader"),
+        options: lessOptions,
       },
       {
         // Options for PostCSS as we reference these options twice
@@ -470,37 +476,54 @@ module.exports = function (webpackEnv) {
             // of CSS.
             // By default we support CSS Modules with the extension .module.css
             {
-              test: cssRegex,
-              exclude: cssModuleRegex,
-              use: getStyleLoaders({
-                importLoaders: 1,
-                sourceMap: isEnvProduction
-                  ? shouldUseSourceMap
-                  : isEnvDevelopment,
-                modules: {
-                  mode: "icss",
+              test: /\.(css|less)$/,
+              include: /node_modules/,
+              use: [
+                'style-loader',
+                {
+                  loader: 'css-loader',
+                  options: {
+                    modules: false,
+                    sourceMap: true,
+                    importLoaders: 1,
+                  },
                 },
-              }),
-              // Don't consider CSS imports dead code even if the
-              // containing package claims to have no side effects.
-              // Remove this when webpack adds a warning or an error for this.
-              // See https://github.com/webpack/webpack/issues/6571
-              sideEffects: true,
+                {
+                  loader: 'less-loader',
+                  options: {
+                    lessOptions: { javascriptEnabled: true },
+                  },
+                },
+              ],
             },
-            // Adds support for CSS Modules (https://github.com/css-modules/css-modules)
-            // using the extension .module.css
             {
-              test: cssModuleRegex,
-              use: getStyleLoaders({
-                importLoaders: 1,
-                sourceMap: isEnvProduction
-                  ? shouldUseSourceMap
-                  : isEnvDevelopment,
-                modules: {
-                  mode: "local",
-                  getLocalIdent: getCSSModuleLocalIdent,
+              test: /\.less$/,
+              exclude: /node_modules/,
+              use: [
+                'style-loader',
+                {
+                  loader: 'css-loader',
+                  options: {
+                    import: true,
+                    esModule: true,
+                    // exportType: 'css-style-sheet',
+                    modules: {
+                      // auto: true,
+                      exportGlobals: true,
+                      // https://www.npmjs.com/package/css-loader
+                      // 样式名规则配置
+                      localIdentName: '[local]__[hash:base64:5]',
+                      exportLocalsConvention: 'camelCaseOnly',
+                    },
+                  },
                 },
-              }),
+                {
+                  loader: 'less-loader',
+                  options: {
+                    // additionalData: `@import "antd/dist/antd.less";`,
+                  },
+                },
+              ],
             },
             // Opt-in support for SASS (using .scss or .sass extensions).
             // By default we support SASS Modules with the

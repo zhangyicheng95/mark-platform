@@ -1,8 +1,5 @@
 .basic-layout-sider {
-  width: 54px !important;
-  min-width: 54px !important;
-  max-width: 54px !important;
-  background: #273142;
+  background: rgb(6, 22, 40);
   overflow: hidden;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -17,11 +14,6 @@
       justify-content: space-between;
       padding-top: 16px;
 
-      .sider-icon {
-        width: 43px;
-        height: 37px;
-      }
-
       .ant-menu {
         flex: 1;
         background: transparent;
@@ -29,56 +21,34 @@
 
         .ant-menu-item {
           height: 64px;
-          line-height: 40px;
+          line-height: 30px;
           padding: 16px 8px !important;
           margin-bottom: 24px;
+          color: #fff;
+
+          &:hover {
+            background: #e6f7ff;
+            color: #1890ff;
+          }
+
+          &-selected {
+            color: #1890ff;
+            border-right: 2px solid #1890ff;
+          }
 
           .ant-menu-title-content {
             width: 30px;
             height: 30px;
 
             .anticon {
-              font-size: 30px;
+              font-size: 20px;
             }
           }
         }
       }
 
-      .sider-bottom {
-        transform: rotate(270deg);
-        font-style: normal;
-        color: #fff;
-        margin-bottom: 80px;
-        justify-content: center;
-
-        .sider-bottom-title {
-          font-family: 'PingFangSC-Semibold', 'PingFang SC Semibold', 'PingFang SC', sans-serif;
-          font-weight: 700;
-          font-size: 32px;
-          line-height: 27px;
-        }
-
-        .sider-bottom-label {
-          font-family: 'PingFangSC-Regular', 'PingFang SC', sans-serif;
-          font-weight: 400;
-          font-size: 20px;
-          line-height: 20px;
-        }
-      }
-
-      .setting-icon-box {
-        width: 54px;
-        height: 64px;
-        cursor: pointer;
-        transition: background-color 1s;
-
-        &:hover {
-          background: rgba(9, 109, 217, .5);
-        }
-
-        .bottom-setting-icon {
-          font-size: 30px;
-        }
+      .ant-menu-inline {
+        border: 0;
       }
     }
   }

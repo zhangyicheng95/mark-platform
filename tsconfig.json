@@ -1,4 +1,5 @@
 {
+  "extends": "./tsconfig.extend.json",
   "compilerOptions": {
     "target": "es2021",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -15,14 +16,14 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": ".",
-    "paths": {
-      "@": ["./src/*"],
-      "SRC_COMP/*": ["./src/components/*"],
-      "SRC_PAGE/*": ["./src/pages/*"],
-      "SRC_UTILS/*": ["src/utils/*"],
-      "SRC_ASSETS/*": ["src/assets/*"]
-    }
+    // "baseUrl": ".",
+    // "paths": {
+    //   "@": ["./src/*"],
+    //   "SRC_COMP/*": ["src/components/*"],
+    //   "SRC_PAGE/*": ["src/pages/*"],
+    //   "SRC_UTILS/*": ["src/utils/*"],
+    //   "SRC_ASSETS/*": ["src/assets/*"]
+    // }
   },
   "include": [
     "src",

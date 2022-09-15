@@ -16,7 +16,7 @@ import {
 import { useLocation, useNavigate } from "react-router";
 import { menuConfig } from "./config/siderNav";
 import icon from "../../assets/icon.png";
-import "./index.less";
+import styles from "./index.less";
 
 const { Sider } = Layout;
 const iconList: any = {
@@ -38,7 +38,7 @@ const SiderNav = (props: any) => {
   }, [pathname]);
 
   return (
-    <Sider className={"basic-layout-sider"}>
+    <Sider className={styles.basicLayoutSider}>
       <Menu
         mode="inline"
         selectedKeys={[selectedKeys !== "/" ? selectedKeys : "/home"]}
@@ -50,7 +50,7 @@ const SiderNav = (props: any) => {
           const { name, path, id, icon = "", check } = menu;
           return (
             <Menu.Item key={path}>
-              <Popover placement="right" content={name}>
+              <Popover placement="right" content={name} className="flex-box">
                 {iconList[icon]}
                 <span style={{ marginLeft: 10, }}>{name}</span>
               </Popover>

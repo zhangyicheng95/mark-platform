@@ -1,5 +1,5 @@
 {
-  "name": "testproject",
+  "name": "mark-platform",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -40,6 +40,7 @@
     "jest-resolve": "^27.4.2",
     "jest-watch-typeahead": "^1.0.0",
     "mini-css-extract-plugin": "^2.4.5",
+    "node-sass": "^7.0.3",
     "postcss": "^8.4.4",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-loader": "^6.2.1",
@@ -116,12 +117,12 @@
     },
     "transformIgnorePatterns": [
       "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$",
-      "^.+\\.module\\.(css|sass|scss)$"
+      "^.+\\.module\\.(css|sass|scss|less)$"
     ],
     "modulePaths": [],
     "moduleNameMapper": {
       "^react-native$": "react-native-web",
-      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+      "^.+\\.module\\.(css|sass|scss|less)$": "identity-obj-proxy"
     },
     "moduleFileExtensions": [
       "web.js",
@@ -147,6 +148,8 @@
     ]
   },
   "devDependencies": {
-    "@types/webpack-env": "^1.18.0"
+    "@types/webpack-env": "^1.18.0",
+    "less": "^4.1.2",
+    "less-loader": "5.0.0"
   }
 }

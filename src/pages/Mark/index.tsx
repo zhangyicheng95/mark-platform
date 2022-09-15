@@ -31,7 +31,7 @@ const Mark: React.FC = (props: any) => {
     gMap.addLayer(gFirstImageLayer);
   }, []);
 
-  return <div className={styles['mark']} id="mark" style={{ position: 'relative', height: '100%' }}>
+  return <div className={styles.mark} id="mark" >
     mark
     <Button>12312</Button>
   </div>;

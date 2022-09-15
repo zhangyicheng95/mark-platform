@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 // import 'antd/dist/antd.dark.css';
 import 'antd/dist/antd.css';
-import './index.css';
+import './index.less';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
