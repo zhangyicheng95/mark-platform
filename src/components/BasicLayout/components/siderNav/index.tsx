@@ -19,12 +19,6 @@ import icon from "../../assets/icon.png";
 import styles from "./index.less";
 
 const { Sider } = Layout;
-const iconList: any = {
-  home: <HomeOutlined />,
-  collect: <VideoCameraOutlined />,
-  resource: <GoldOutlined />,
-};
-
 // interface Props {
 
 // }
@@ -41,23 +35,12 @@ const SiderNav = (props: any) => {
     <Sider className={styles.basicLayoutSider}>
       <Menu
         mode="inline"
-        selectedKeys={[selectedKeys !== "/" ? selectedKeys : "/home"]}
+        defaultSelectedKeys={[selectedKeys !== "/" ? selectedKeys : "/home"]}
         onClick={({ key }) => {
           navigate(key, { replace: true });
         }}
-      >
-        {menuConfig.map((menu) => {
-          const { name, path, id, icon = "", check } = menu;
-          return (
-            <Menu.Item key={path}>
-              <Popover placement="right" content={name} className="flex-box">
-                {iconList[icon]}
-                <span style={{ marginLeft: 10, }}>{name}</span>
-              </Popover>
-            </Menu.Item>
-          );
-        })}
-      </Menu>
+        items={menuConfig}
+      />
     </Sider>
   );
 };

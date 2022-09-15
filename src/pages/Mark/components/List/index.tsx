@@ -5,9 +5,15 @@ import { useNavigate } from "react-router-dom";
 import TooltipDiv from "../../../../components/TooltipDiv";
 import BasicTable from "../../../../components/BasicTable";
 import moment from "moment";
+import { getuid } from "process";
+import { guid } from "../../../../utils/util";
 
 const MarkList: React.FC = (props: any) => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log(1);
+  }, []);
 
   const columns = [
     {
@@ -54,7 +60,7 @@ const MarkList: React.FC = (props: any) => {
       // pagination={null}
       dataSource={[{ name: 'first' }, { name: '第二个' }]}
       rowKey={(record: { id: any }) => {
-        return record.id;
+        return record.id || guid();
       }}
     />
   </div>;
