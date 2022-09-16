@@ -479,9 +479,9 @@ module.exports = function (webpackEnv) {
               test: /\.(css|less)$/,
               include: /node_modules/,
               use: [
-                'style-loader',
+                "style-loader",
                 {
-                  loader: 'css-loader',
+                  loader: "css-loader",
                   options: {
                     modules: false,
                     sourceMap: true,
@@ -489,7 +489,7 @@ module.exports = function (webpackEnv) {
                   },
                 },
                 {
-                  loader: 'less-loader',
+                  loader: "less-loader",
                   options: {
                     lessOptions: { javascriptEnabled: true },
                   },
@@ -500,9 +500,9 @@ module.exports = function (webpackEnv) {
               test: /\.less$/,
               exclude: /node_modules/,
               use: [
-                'style-loader',
+                "style-loader",
                 {
-                  loader: 'css-loader',
+                  loader: "css-loader",
                   options: {
                     import: true,
                     esModule: true,
@@ -512,13 +512,13 @@ module.exports = function (webpackEnv) {
                       exportGlobals: true,
                       // https://www.npmjs.com/package/css-loader
                       // 样式名规则配置
-                      localIdentName: '[local]__[hash:base64:5]',
-                      exportLocalsConvention: 'camelCaseOnly',
+                      localIdentName: "[local]__[hash:base64:5]",
+                      exportLocalsConvention: "camelCaseOnly",
                     },
                   },
                 },
                 {
-                  loader: 'less-loader',
+                  loader: "less-loader",
                   options: {
                     // additionalData: `@import "antd/dist/antd.less";`,
                   },
@@ -599,6 +599,7 @@ module.exports = function (webpackEnv) {
           },
           isEnvProduction
             ? {
+                configName: "env-config.js",
                 minify: {
                   removeComments: true,
                   collapseWhitespace: true,

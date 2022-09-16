@@ -12,7 +12,7 @@ const MarkList: React.FC = (props: any) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(1);
+
   }, []);
 
   const columns = [

@@ -1,6 +1,6 @@
 var DATACENTERAPP = (function () {
   var defaultConfig = {
-    PATH_PREFIX: "",
+    ifShowSider: false,
   };
   return defaultConfig;
 })();

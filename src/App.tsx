@@ -12,6 +12,7 @@ function App() {
         <Routes>
           <Route path="/mark/*" element={<Mark />} />
           <Route path="/trainer/*" element={<Trainer />} />
+          <Route path="*" element={<Mark />} />
         </Routes>
       </BasicLayout>
     </HashRouter>

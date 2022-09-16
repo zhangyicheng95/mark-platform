@@ -1,8 +1,19 @@
 .mark-canvas {
-    position: relative;
     height: calc(100% - 24px);
     width: 100%;
+    background: #fff;
+    padding: 16px;
     overflow: hidden;
 
-    :global {}
+    :global {
+        .btn-box {
+            height: 32px;
+            margin-bottom: 8px;
+        }
+
+        .canvas-box {
+            position: relative;
+            height: calc(100% - 40px);
+        }
+    }
 }

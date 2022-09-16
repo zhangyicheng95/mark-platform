@@ -19,9 +19,6 @@ import icon from "../../assets/icon.png";
 import styles from "./index.less";
 
 const { Sider } = Layout;
-// interface Props {
-
-// }
 
 const SiderNav = (props: any) => {
   const navigate = useNavigate();
@@ -35,7 +32,7 @@ const SiderNav = (props: any) => {
     <Sider className={styles.basicLayoutSider}>
       <Menu
         mode="inline"
-        defaultSelectedKeys={[selectedKeys !== "/" ? selectedKeys : "/home"]}
+        selectedKeys={[selectedKeys !== "/" ? selectedKeys : "/home"]}
         onClick={({ key }) => {
           navigate(key, { replace: true });
         }}
