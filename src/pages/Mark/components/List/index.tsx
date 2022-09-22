@@ -1,18 +1,21 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, Table } from 'antd';
 import styles from "./index.less";
 import { useNavigate } from "react-router-dom";
 import TooltipDiv from "../../../../components/TooltipDiv";
 import BasicTable from "../../../../components/BasicTable";
 import moment from "moment";
-import { getuid } from "process";
 import { guid } from "../../../../utils/util";
+import { getdataList } from "../../../../services";
 
 const MarkList: React.FC = (props: any) => {
   const navigate = useNavigate();
+  const [list, setList] = useState([]);
 
   useEffect(() => {
-
+    getdataList().then((res: any) => {
+      setList(res?.data);
+    });
   }, []);
 
   const columns = [
@@ -58,7 +61,7 @@ const MarkList: React.FC = (props: any) => {
     <BasicTable
       columns={columns}
       // pagination={null}
-      dataSource={[{ name: 'first' }, { name: '第二个' }]}
+      dataSource={list}
       rowKey={(record: { id: any }) => {
         return record.id || guid();
       }}

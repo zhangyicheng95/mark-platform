@@ -1,11 +1,28 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Button, message, Spin } from 'antd';
+import { Button, Dropdown, Menu, message, Popover, Spin } from 'antd';
+import { MinusSquareOutlined, PictureOutlined, PlusSquareOutlined } from "@ant-design/icons";
+import html2canvas from 'html2canvas';
+// @ts-ignore
+import { saveAs } from "file-saver";
 import styles from "./index.less";
 import markIcon from '../../../../assets/marker.png';
+import cursorIcon from '../../../../assets/cursor.svg';
+import grabHandIcon from '../../../../assets/grabHand.svg';
+import plusIcon from '../../../../assets/magnifier-plus.svg';
+import minusIcon from '../../../../assets/magnifier-minus.svg';
+import circleIcon from '../../../../assets/circle.svg';
+import maskIcon from '../../../../assets/draw-mask.svg';
+import clearMaskIcon from '../../../../assets/clear-mask.svg';
+import polyLineIcon from '../../../../assets/poly-line.svg';
+import polygonIcon from '../../../../assets/polygon.svg';
+import lineIcon from '../../../../assets/line.svg';
+import rectIcon from '../../../../assets/rect.svg';
+
 
 const AILabel = require('ailabel');
 const CONTAINER_ID = 'mark-canvas';
 let timer: string | number | NodeJS.Timeout | null | undefined = null;
+let img: HTMLImageElement | null = null;
 let gMap: any | null = null;
 let gFirstFeatureLayer: any | null = null;
 let gFirstMaskLayer: any | null = null;
@@ -15,19 +32,21 @@ let drawingStyle: any = {}; // 绘制过程中样式
 const MarkCanvas: React.FC = (props: any) => {
   const markRef = useRef<any>();
   const [loading, setLoading] = useState(false);
+  const [selectedBtn, setSelectedBtn] = useState('PAN');
 
   useEffect(() => {
     timer && clearTimeout(timer);
     timer = setTimeout(() => {
       const dom = document.getElementById(CONTAINER_ID);
-      const img = new Image();
+      img = new Image();
       img.src = 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fphoto.orsoon.com%2F180824%2FEPS-180824_223%2F219qYP0XCj_small.jpg&refer=http%3A%2F%2Fphoto.orsoon.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1665744790&t=17e932b12a8992341d78bc1f40f96d0b';
-      img.width = 800;
+      img.name = 'img.png';
+      // img.width = 800;
       // img.height = 800;
       // 声明容器
       gMap = new AILabel.Map(CONTAINER_ID, {
-        size: { width: dom?.clientWidth, height: dom?.clientHeight },
-        center: { x: 400, y: 200 },
+        // size: { width: dom?.clientWidth, height: dom?.clientHeight },
+        center: { x: 400, y: 170 },
         zoom: 800,
         mode: 'PAN', // 绘制线段
         refreshDelayWhenZooming: true, // 缩放时是否允许刷新延时，性能更优
@@ -36,6 +55,11 @@ const MarkCanvas: React.FC = (props: any) => {
         zoomWheelRatio: 5, // 控制滑轮缩放缩率[0, 10), 值越小，则缩放越快，反之越慢
         withHotKeys: true // 关闭快捷键
       });
+      // click单击事件
+      gMap.events.on('click', (point: any) => {
+        console.log('--click--', point);
+      });
+      // 不同的标记功能
       gMap.events.on('drawDone', (type: any, data: any) => {
         console.log('--type, data--', type, data);
         if (type === 'MARKER') {
@@ -51,10 +75,15 @@ const MarkCanvas: React.FC = (props: any) => {
             }, // markerInfo
             { name: '第一个marker注记' } // props
           );
-          marker.events.on('click', (marker: any) => {
+          marker.events.on('dragEnd', (marker: any, newPosition: any) => {
+            console.log('marker dragEnd');
+            marker.updatePosition(newPosition);
+          });
+          marker.events.on('rightClick', (marker: any) => {
             console.log('marker click');
             gMap.markerLayer.removeMarkerById(marker.id);
           });
+          marker.enableDragging();
           gMap.markerLayer.addMarker(marker);
         } else if (type === 'POINT') {
           const pointFeature = new AILabel.Feature.Point(
@@ -130,6 +159,27 @@ const MarkCanvas: React.FC = (props: any) => {
           gFirstMaskLayer.addAction(clearMaskAction);
         }
       });
+      gMap.events.on('boundsChanged', (data: any) => {
+        // 背景图拖动/缩放
+        return 2222;
+      });
+      gMap.events.on('featureSelected', (feature: any) => {
+        // 双击选中
+        gMap.setActiveFeature(feature);
+      });
+      gMap.events.on('featureUnselected', () => {
+        // 取消featureSelected
+        gMap.setActiveFeature(null);
+      });
+      gMap.events.on('featureUpdated', (feature: any, shape: any) => {
+        // 圆形/矩形 框选更新
+        feature.updateShape(shape);
+      });
+      gMap.events.on('featureDeleted', (feature: any) => {
+        console.log('featureDeleted')
+        const { id: featureId } = feature;
+        gFirstFeatureLayer.removeFeatureById(featureId);
+      });
       // 显示一张图片
       gFirstImageLayer = new AILabel.Layer.Image(
         'first-layer-image', // id
@@ -137,25 +187,27 @@ const MarkCanvas: React.FC = (props: any) => {
           src: img.src,
           width: img.width,
           height: img.height,
+          crossOrigin: false, // 图片是否跨域
           position: { // 图片左上角坐标
             x: 0,
             y: 0
-          }
+          },
+          // grid: { // 3 * 3
+          //   columns: [{ color: '#9370DB' }, { color: '#9370DB' }, { color: '#9370DB' }],
+          //   rows: [{ color: '#FF6347' }, { color: '#FF6347' },]
+          // }
         }, // imageInfo
         { name: '第一个图片图层' }, // props
         { zIndex: 5 } // style
       );
       // 图片层相关事件监听
       gFirstImageLayer.events.on('loadStart', (a: any, b: any) => {
-        console.log('--loadStart--', a, b);
         setLoading(true);
       });
       gFirstImageLayer.events.on('loadEnd', (a: any, b: any) => {
-        console.log('--loadEnd--', a, b);
         setLoading(false);
       });
       gFirstImageLayer.events.on('loadError', (a: any, b: any) => {
-        console.log('--loadError--', a, b);
         message.error('图片加载失败');
         setLoading(false);
       });
@@ -193,6 +245,7 @@ const MarkCanvas: React.FC = (props: any) => {
     console.log('--rleData--', rleData);
   }
   function setMode(mode: any) {
+    setSelectedBtn(mode);
     gMap.setMode(mode);
     // 后续对应模式处理
     switch (gMap.mode) {
@@ -250,7 +303,20 @@ const MarkCanvas: React.FC = (props: any) => {
 
   // 导出图片上护具
   async function exportImage(type: any) {
-    console.log(gMap)
+    const shareContent: any = document.getElementById(CONTAINER_ID);
+    const width = shareContent?.offsetWidth;
+    const height = shareContent?.offsetHeight;
+    const scale = 2 || window.devicePixelRatio; // 也可以使用设备像素比
+    html2canvas(shareContent, {
+      scale: scale,
+      useCORS: true, // 是否尝试使⽤CORS从服务器加载图像
+      allowTaint: false, // 是否允许跨域图像。会污染画布，导致⽆法使⽤canvas.toDataURL ⽅法
+      width: width,
+      height: height,
+    }).then((canvas: any) => {
+      saveAs(canvas.toDataURL('image/png', { quality: 1 }), 'export.png');
+    });
+
     const imagedata = await gMap.exportLayersToImage(
       { x: 0, y: 0, width: 500, height: 354 },
       { type, format: 'image/png' }
@@ -260,14 +326,12 @@ const MarkCanvas: React.FC = (props: any) => {
     if (type === 'base64') {
       // 导出base64格式
       imageDom.src = imagedata;
-    }
-    else {
+    } else {
       // 导出blob格式
       const url = URL.createObjectURL(imagedata);
       imageDom.src = url;
       imageDom.onload = () => { URL.revokeObjectURL(url); }
     }
-
     let aLink = document.createElement('a');
     aLink.style.display = 'none';
     aLink.href = imageDom.src;
@@ -289,77 +353,102 @@ const MarkCanvas: React.FC = (props: any) => {
     gMap && gMap.destroy();
     window.removeEventListener('resize', () => gMap && gMap.resize());
   }
-  const btnList = [
-    {
-      title: '平移',
-      event: () => { setMode('PAN'); },
-    },
-    {
-      title: '标注',
-      event: () => { setMode('MARKER'); },
-    },
-    {
-      title: '点',
-      event: () => { setMode('POINT'); },
-    },
-    {
-      title: '线段',
-      event: () => { setMode('LINE'); },
-    },
-    {
-      title: '多线段',
-      event: () => { setMode('POLYLINE'); },
-    },
-    {
-      title: '圆',
-      event: () => { setMode('CIRCLE'); },
-    },
-    {
-      title: '矩形',
-      event: () => { setMode('RECT'); },
-    },
-    {
-      title: '多边形',
-      event: () => { setMode('POLYGON'); },
-    },
-    {
-      title: '获取标注数据',
-      event: () => { getFeatures(); },
-    },
-    {
-      title: '导出base64图片',
-      event: () => { exportImage('base64'); },
-    },
-    {
-      title: '导出blob图片',
-      event: () => { exportImage('blob'); },
-    },
-    {
-      title: '涂抹',
-      event: () => { setMode('DRAWMASK'); },
-    },
-    {
-      title: '擦除',
-      event: () => { setMode('CLEARMASK'); },
-    },
-    {
-      title: '获取rle数据',
-      event: () => { getRle(); },
-    }
-  ];
+
+  const lineMenu = (
+    <Menu
+      items={[
+        {
+          key: 'LINE',
+          label: '线段',
+          onClick: () => { setMode('LINE') }
+        },
+        {
+          key: 'POLYLINE',
+          label: '多线段',
+          onClick: () => { setMode('POLYLINE') }
+        },
+      ]}
+    />
+  );
+  const rectMenu = (
+    <Menu
+      items={[
+        {
+          key: 'RECT',
+          label: '矩形选择框',
+          onClick: () => { setMode('RECT') }
+        },
+        {
+          key: 'POLYGON',
+          label: '多边形选择框',
+          onClick: () => { setMode('POLYGON') }
+        },
+        {
+          key: 'CIRCLE',
+          label: '圆形选择框',
+          onClick: () => { setMode('CIRCLE') }
+        },
+      ]}
+    />
+  );
 
   return <div className={styles.markCanvas} ref={markRef}>
-    <Spin spinning={loading} tip="Loading...">
-      <div className="btn-box flex-box">
-        {btnList.map((item: any, index: number) => {
-          const { title, event } = item;
-          return <Button key={index} onClick={() => event && event(gMap)} style={{ marginRight: 10 }}>
-            {title}
-          </Button>
-        })}
+    <div className="canvas-header flex-box-justify-end">
+      <Button onClick={() => getFeatures()} style={{ marginRight: 10 }} >获取标注数据</Button>
+      <Button onClick={() => getRle()} style={{ marginRight: 10 }} >获取rle数据</Button>
+      <Button onClick={() => exportImage('base64')} style={{ marginRight: 10 }} >导出base64图片</Button>
+      <Button onClick={() => exportImage('blob')} style={{ marginRight: 10 }} >导出blob图片</Button>
+    </div>
+    <div className="canvas-body flex-box-start">
+      <div className="btn-box">
+        <div className="top">
+          <Popover placement="right" content={lineMenu} style={{ padding: 0 }}>
+            {
+              selectedBtn === 'LINE' ?
+                <img src={lineIcon} alt="line" />
+                :
+                <img src={polyLineIcon} alt="poly-line" />
+            }
+          </Popover>
+          <Popover placement="right" content={rectMenu} >
+            {
+              selectedBtn === 'CIRCLE' ?
+                <img src={circleIcon} alt="circle" />
+                :
+                selectedBtn === 'RECT' ?
+                  <img src={rectIcon} alt="RECT" />
+                  :
+                  <img src={polygonIcon} alt="POLYGON" />
+            }
+          </Popover>
+          <Popover placement="right" content={"画笔"} >
+            <img src={maskIcon} alt="mask" onClick={() => setMode('DRAWMASK')} />
+          </Popover>
+          <Popover placement="right" content={"橡皮擦"} >
+            <img src={clearMaskIcon} alt="mask" onClick={() => setMode('CLEARMASK')} />
+          </Popover>
+        </div>
+        <div className="center">
+          {/* <img src={cursorIcon} alt="cursor-default" onClick={() => setMode('POINT')} /> */}
+
+          <img src={cursorIcon} alt="cursor" onClick={() => setMode('')} />
+          <img src={grabHandIcon} alt="grab-hand" onClick={() => setMode('PAN')} />
+        </div>
+        <div className="bottom">
+          <img src={plusIcon} alt="plus" onClick={() => zoomIn()} />
+          <img src={minusIcon} alt="minus" onClick={() => zoomOut()} />
+        </div>
       </div>
-      <div className="canvas-box" id={CONTAINER_ID} />
-    </Spin>
+      <Spin spinning={loading} tip="Loading...">
+        <div className="canvas-box" id={CONTAINER_ID} />
+      </Spin>
+    </div>
+    <div className="canvas-footer flex-box-center">
+      <div className="img-box">
+        <PictureOutlined style={{ marginRight: 8, color: 'rgb(60, 124, 255)' }} />
+        {img && img?.name}
+      </div>
+    </div>
   </div>;
 };
 

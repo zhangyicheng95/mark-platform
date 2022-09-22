@@ -1,40 +1,57 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Layout } from 'antd';
-
+import React, { useEffect, } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Breadcrumb, Layout } from 'antd';
 import SiderNav from './components/siderNav';
 import CHeader from './components/header';
-import icon from './assets/icon.png';
-
 import styles from './index.less';
-import { useLocation, useNavigate } from 'react-router-dom';
 
 
-const { Header, Content, Sider } = Layout;
+const { Content, } = Layout;
 
-// interface Props {
-//   route?: any;
-// }
+interface Props {
 
-const BasicLayout = (props: any) => {
+}
+
+const BasicLayout: React.FC<Props> = (props: any) => {
   const {
-    children, route
+    children,
   } = props;
   const navigate = useNavigate();
   const { pathname = '/' } = useLocation();
   useEffect(() => {
+    console.log(pathname)
     if (pathname === '/') {
       navigate('/mark');
     };
-  }, []);
+  }, [pathname]);
 
   return (
     <Layout className={styles.layoutWrapper}>
       <CHeader />
       <Layout>
-        <SiderNav />
+        {
+          pathname.indexOf('/mark/edit') > -1 ?
+            null :
+            <SiderNav />
+        }
         <Layout className="basic-layout">
-          <Content className="basic-layout-content">
-            {children}
+          <Content className="basic-layout-content" style={pathname.indexOf('/mark/edit') > -1 ? { padding: 8 } : {}}>
+            <Breadcrumb className='basic-layout-breadcrumb'>
+              {
+                (pathname.split('/') || []).map((path, index) => {
+                  if (!path) return null;
+                  return <Breadcrumb.Item key={path}>
+                    <a onClick={() => {
+                      if (index === pathname.split('/').length - 1) return;
+                      navigate(path)
+                    }}>{path}</a>
+                  </Breadcrumb.Item>
+                })
+              }
+            </Breadcrumb>
+            <div className="basic-layout-body">
+              {children}
+            </div>
           </Content>
         </Layout>
       </Layout>

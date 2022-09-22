@@ -2,12 +2,23 @@
 
   :global {
     .basic-layout {
-      height: 100vh;
+      height: calc(100vh - 50px);
       overflow: hidden;
 
       .basic-layout-content {
-        padding: 32px 24px;
+        padding: 24px;
         overflow: hidden;
+
+        .basic-layout-breadcrumb {
+          height: 22px;
+          margin-bottom: 8px;
+        }
+
+        .basic-layout-body {
+          height: calc(100% - 30px);
+          width: 100%;
+          overflow: hidden;
+        }
       }
     }
 

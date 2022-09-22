@@ -2,7 +2,7 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 
 import mockRules from '../__MOCK__';
-import { formatResponse } from '@renderer/utils/util'; // 引入mock规则库
+import { formatResponse } from '../utils/util'; // 引入mock规则库
 
 // axios全局配置
 axios.defaults.headers.common.token = '';
